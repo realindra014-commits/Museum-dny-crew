@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri DNY Crew - Museum DNY Crew</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .museum-wall {
+            background: linear-gradient(to bottom, #110e0c 0%, #1c1917 50%, #292524 100%);
+        }
+        .crew-frame {
+            background: #292524;
+            border: 6px solid #44403c;
+            border-bottom: 20px solid #3b3735;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.8);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .crew-frame:hover {
+            transform: scale(1.03) translateY(-4px);
+            box-shadow: 0 15px 30px -5px rgba(245, 158, 11, 0.3);
+        }
+        .spotlight-beam {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 150%;
+            background: linear-gradient(to bottom, rgba(253, 224, 71, 0.25) 0%, rgba(253, 224, 71, 0.05) 70%, transparent 100%);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .crew-card.active-spotlight .spotlight-beam {
+            opacity: 1;
+        }
+    </style>
+    <script>
+        function selectCrew(element) {
+            document.querySelectorAll('.crew-card').forEach(card => card.classList.remove('active-spotlight'));
+            element.classList.add('active-spotlight');
+        }
+    </script>
+</head>
+<body class="bg-stone-950 text-stone-100 min-h-screen flex flex-col font-sans museum-wall">
+
+    <!-- Header -->
+    <header class="p-3 border-b border-stone-800/80 flex justify-between items-center bg-stone-900/90 backdrop-blur z-20 shrink-0">
+        <a href="/" class="text-amber-400 hover:underline text-xs">&larr; Kembali ke Museum</a>
+        
+        <!-- Tombol Tambah Kru HANYA MUNCUL jika login sebagai Admin -->
+        {% if is_admin %}
+        <a href="/admin_dashboard" class="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold px-3 py-1.5 rounded-lg text-xs shadow-lg transition flex items-center gap-1.5">
+            <span>+</span> Kelola / Tambah Kru
+        </a>
+        {% endif %}
+    </header>
+
+    <main class="flex-1 p-4 sm:p-8 max-w-5xl mx-auto w-full">
+        
+        <div class="mb-6 text-center">
+            <h1 class="text-2xl sm:text-3xl font-serif font-bold text-amber-400">👥 Galeri DNY Crew</h1>
+            <p class="text-xs text-stone-400 mt-1">Ruang pameran profil anggota aktif DNY Crew. Klik salah satu foto untuk menyalakan lampu sorot fokus.</p>
+        </div>
+
+        {% if crew %}
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+            {% for member in crew %}
+            <div class="crew-card relative flex flex-col items-center cursor-pointer pt-4" onclick="selectCrew(this)">
+                <div class="spotlight-beam"></div>
+                <div class="w-full h-48 sm:h-56 crew-frame rounded-sm p-2 flex flex-col items-center justify-between relative z-10">
+                    <div class="w-full h-36 sm:h-44 bg-stone-950 border border-stone-800 rounded-sm overflow-hidden flex items-center justify-center">
+                        {% if member.photo %}
+                        <img src="{{ url_for('static', filename='uploads/' + member.photo) }}" alt="{{ member.name }}" class="w-full h-full object-cover">
+                        {% else %}
+                        <span class="text-4xl">👤</span>
+                        {% endif %}
+                    </div>
+                    <div class="text-center w-full mt-1">
+                        <span class="text-xs sm:text-sm font-serif font-bold text-amber-200 block truncate">{{ member.name }}</span>
+                        <span class="text-[10px] text-stone-400 block truncate">{{ member.role if member.role else 'Anggota Kru' }}</span>
+                    </div>
+                </div>
+
+                {% if is_admin %}
+                <form action="/admin/set_featured_crew/{{ loop.index0 }}" method="POST" class="mt-2 z-10">
+                    <button type="submit" class="bg-stone-800 hover:bg-stone-700 text-amber-300 text-[10px] px-2 py-1 rounded border border-amber-500/30 transition">
+                        ⭐ Jadikan Featured
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-16 bg-stone-900/50 border border-stone-800 rounded-2xl">
+            <span class="text-4xl block mb-2">🏛️</span>
+            <p class="text-xs text-stone-400 italic">Belum ada anggota kru yang dipamerkan di galeri.</p>
+            {% if is_admin %}
+            <a href="/admin_dashboard" class="inline-block mt-3 bg-amber-600 text-stone-950 text-xs font-bold px-3 py-1.5 rounded">
+                + Tambah Anggota di Panel Admin
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </main>
+
+    <footer class="p-3 text-center text-[10px] text-stone-500 bg-stone-950 border-t border-stone-800/80">
+        Museum DNY Crew &copy; Digital Exhibition Hall
+    </footer>
+
+</body>
+</html>

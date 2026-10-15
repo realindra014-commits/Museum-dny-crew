@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsip Perpisahan - Museum DNY</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        let currentAudio = null;
+
+        function toggleFarewellAudio(audioId, badgeId) {
+            const audio = document.getElementById(audioId);
+            const badge = document.getElementById(badgeId);
+
+            document.querySelectorAll('audio').forEach(a => {
+                if (a !== audio) {
+                    a.pause();
+                    a.currentTime = 0;
+                }
+            });
+            document.querySelectorAll('.playing-badge').forEach(b => {
+                b.classList.add('hidden');
+            });
+
+            if (audio.paused) {
+                audio.play().catch(e => console.log("Autoplay dicegah browser"));
+                if (badge) badge.classList.remove('hidden');
+            } else {
+                audio.pause();
+                if (badge) badge.classList.add('hidden');
+            }
+        }
+    </script>
+    <style>
+        .photo-frame {
+            background: #292524;
+            border: 8px solid #44403c;
+            border-bottom: 28px solid #44403c;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(0,0,0,0.8);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .photo-frame:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px -5px rgba(245, 158, 11, 0.2);
+        }
+        .curator-plaque {
+            background: linear-gradient(135deg, #1c1917 0%, #292524 100%);
+            border: 1px solid #78716c;
+            border-left: 4px solid #f59e0b;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="bg-stone-950 text-stone-100 min-h-screen p-4 sm:p-6 font-sans">
+    <div class="max-w-4xl mx-auto">
+        <a href="/" class="text-amber-500 hover:underline text-sm">&larr; Kembali ke Museum</a>
+        <h1 class="text-2xl font-bold mt-4 mb-2 text-amber-400">📜 Arsip Perpisahan & Kenangan</h1>
+        
+        <!-- Plakat Deskripsi Kurator -->
+        <div class="curator-plaque p-3.5 rounded-lg mb-6 flex items-start gap-3">
+            <span class="text-xl">📜</span>
+            <div>
+                <h3 class="text-xs font-serif font-bold text-amber-300 uppercase tracking-wider">Catatan Kurator Pameran</h3>
+                <p class="text-[11px] text-stone-300 mt-0.5 leading-relaxed">
+                    Ruang pameran memorial yang menyimpan kenangan serta melodi lagu perpisahan bagi anggota yang telah menuntaskan perjalanannya di DNY Crew. Klik pada foto untuk mendengarkan lagu kenangan.
+                </p>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
+            {% for item in farewell %}
+            <div class="bg-stone-900 border border-stone-800 rounded-xl overflow-hidden shadow-xl flex flex-col justify-between">
+                <div>
+                    {% if item.photo %}
+                    <div class="p-4 bg-stone-950 flex justify-center">
+                        <div class="photo-frame rounded cursor-pointer relative group w-48" {% if item.audio %}onclick="toggleFarewellAudio('audio-{{ loop.index }}', 'badge-{{ loop.index }}')"{% endif %}>
+                            <div class="w-full h-44 bg-stone-950 overflow-hidden border border-stone-900 relative">
+                                <img src="{{ url_for('static', filename='uploads/' + item.photo) }}" alt="{{ item.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                
+                                {% if item.audio %}
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <span class="bg-amber-500 text-stone-950 font-bold text-[10px] px-2.5 py-1 rounded-full shadow-lg">🎵 Putar Lagu</span>
+                                </div>
+                                <div id="badge-{{ loop.index }}" class="playing-badge hidden absolute top-1 right-1 bg-amber-500 text-stone-950 text-[9px] font-bold px-1.5 py-0.5 rounded shadow animate-pulse">
+                                    ♫ Memutar...
+                                </div>
+                                <audio id="audio-{{ loop.index }}" src="{{ url_for('static', filename='uploads/' + item.audio) }}" preload="none"></audio>
+                                {% endif %}
+                            </div>
+
+                            <div class="mt-1 text-center w-full px-1">
+                                <h2 class="font-serif font-bold text-[11px] text-amber-200 tracking-wide truncate">{{ item.title }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="px-4 pb-3">
+                        <p class="text-xs text-stone-300 text-center">{{ item.message }}</p>
+                    </div>
+                </div>
+
+                <div>
+                    {% if item.end_date %}
+                    <div class="p-3 bg-stone-950/80 border-t border-stone-800 flex items-center justify-between text-[11px] text-stone-400">
+                        <span>🗓️ Berakhir Kerja:</span>
+                        <span class="font-semibold text-amber-400">{{ item.end_date }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <p class="text-stone-500 italic col-span-full text-center py-10">Belum ada arsip perpisahan yang dipindahkan.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

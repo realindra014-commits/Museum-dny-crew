@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Kontrol Admin - Museum DNY Crew</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-stone-950 text-stone-100 min-h-screen p-4 sm:p-6 font-sans">
+    <div class="max-w-5xl mx-auto">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6 bg-stone-900 border border-stone-800 p-4 rounded-2xl shadow-xl">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-serif font-bold text-amber-400">⚙️ Panel Kontrol & Manajemen Admin</h1>
+                <p class="text-xs text-stone-400 mt-0.5">Pusat pengelolaan seluruh unggahan foto, lagu perpisahan, dan artefak museum.</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <a href="/vault" class="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold px-3 py-1.5 rounded text-xs transition">
+                    🗝️ Buka Vault Rahasia
+                </a>
+                <a href="/" class="bg-stone-800 hover:bg-stone-700 text-stone-300 px-3 py-1.5 rounded text-xs transition">
+                    Keluar ke Lobi
+                </a>
+            </div>
+        </div>
+
+        {% if success_msg %}
+        <div class="bg-green-950/60 border border-green-700 text-green-300 text-xs p-3 rounded mb-6 text-center font-medium shadow-lg">
+            ✅ {{ success_msg }}
+        </div>
+        {% endif %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- KIRI: Ganti Sandi & Manajemen Kru + Tombol Hapus -->
+            <div class="space-y-6">
+                <!-- 1. Ganti Sandi Admin -->
+                <div class="bg-stone-900 border border-stone-800 p-4 rounded-xl">
+                    <h3 class="text-sm font-bold text-amber-400 mb-3 border-b border-stone-800 pb-2">🔒 Pengaturan Keamanan (Ganti Sandi)</h3>
+                    <form action="/admin/change_password" method="POST" class="space-y-3 text-xs">
+                        <div>
+                            <label class="block text-stone-400 mb-1">Masukkan Sandi Admin Baru:</label>
+                            <input type="password" name="new_password" required placeholder="Sandi baru..." class="w-full bg-stone-950 border border-stone-800 rounded p-2 text-stone-200">
+                        </div>
+                        <button type="submit" class="w-full bg-stone-800 hover:bg-stone-700 text-amber-400 border border-amber-500/30 py-2 rounded transition font-bold">
+                            Perbarui Sandi Admin
+                        </button>
+                    </form>
+                </div>
+
+                <!-- 2. Tambah & Hapus Anggota Kru -->
+                <div class="bg-stone-900 border border-stone-800 p-4 rounded-xl">
+                    <h3 class="text-sm font-bold text-amber-400 mb-3 border-b border-stone-800 pb-2">👥 Manajemen Anggota Kru</h3>
+                    <form action="/admin/add_crew" method="POST" enctype="multipart/form-data" class="space-y-3 text-xs mb-6">
+                        <div>
+                            <label class="block text-stone-400 mb-1">Nama Anggota:</label>
+                            <input type="text" name="name" required placeholder="Contoh: Indra Irawan" class="w-full bg-stone-950 border border-stone-800 rounded p-2 text-stone-200">
+                        </div>
+                        <div>
+                            <label class="block text-stone-400 mb-1">Peran / Posisi:</label>
+                            <input type="text" name="role" placeholder="Contoh: Lead Animator" class="w-full bg-stone-950 border border-stone-800 rounded p-2 text-stone-200">
+                        </div>
+                        <div>
+                            <label class="block text-stone-400 mb-1">Tanggal Ulang Tahun:</label>
+                            <input type="text" name="bday_date" placeholder="Contoh: 15 Agustus" class="w-full bg-stone-950 border border-stone-800 rounded p-2 text-stone-200">
+                        </div>
+                        <div>
+                            <label class="block text-stone-400 mb-1">Foto Profil:</label>
+                            <input type="file" name="photo" accept="image/*" class="w-full text-stone-400 text-xs">
+                        </div>
+                        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold py-2 rounded transition">
+                            Simpan Anggota Baru
+                        </button>
+                    </form>
+
+                    <h4 class="text-xs font-bold text-stone-300 mb-2">Daftar & Hapus Anggota Aktif:</h4>
+                    <div class="space-y-2 max-h-48 overflow-y-auto pr-1 text-xs">
+                        {% if data.crew %}
+                            {% for member in data.crew %}
+                            <div class="bg-stone-950 p-2.5 rounded border border-stone-800 flex justify-between items-center">
+                                <span class="font-bold text-amber-200">{{ member.name }}</span>
+                                <form action="/admin/delete_crew/{{ loop.index0 }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus anggota ini?');">
+                                    <button type="submit" class="bg-red-950/60 hover:bg-red-900 text-red-300 border border-red-800 px-2 py-1 rounded text-[10px]">
+                                        🗑️ Hapus
+                                    </button>
+                                </form>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-xs text-stone-500 italic">Belum ada kru.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- KANAN: Bioskop & Suvenir -->
+            <div class="space-y-6">
+                <!-- 1. Tambah & Hapus Video Bioskop -->
+                <div class="bg-stone-900 border border-stone-800 p-4 rounded-xl">
+                    <h3 class="text-sm font-bold text-amber-400 mb-3 border-b border-stone-800 pb-2">🎬 Manajemen Bioskop Mini</h3>
+                    <form action="/admin/add_cinema" method="POST" class="space-y-3 text-xs mb-4">
+                        <div>
+                            <label class="block text-stone-400 mb-1">Judul Karya:</label>
+                            <input type="text" name="title" required placeholder="Judul video..." class="w-full bg-stone-950 border border-stone-800 rounded p-2 text-stone-200">
+                        </div>
+                        <div>
+                            <label class="block text-stone-400 mb-1">URL YouTube:</label>
+                            <input type="text" name="video_url" required placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-stone-950 border border-stone-800 rounded p-2 text-stone-200">
+                        </div>
+                        <div>
+                            <label class="block text-stone-400 mb-1">Deskripsi:</label>
+                            <input type="text" name="desc" placeholder="Sinopsis..." class="w-full bg-stone-950 border border-stone-800 rounded p-2 text-stone-200">
+                        </div>
+                        <button type="submit" class="w-full bg-stone-800 hover:bg-stone-700 text-amber-400 border border-amber-500/30 py-2 rounded transition font-bold">
+                            Tambah Video
+                        </button>
+                    </form>
+
+                    <h4 class="text-xs font-bold text-stone-300 mb-2">Daftar Video Bioskop:</h4>
+                    <div class="space-y-2 max-h-40 overflow-y-auto pr-1 text-xs">
+                        {% if data.cinema %}
+                            {% for cin in data.cinema %}
+                            <div class="bg-stone-950 p-2.5 rounded border border-stone-800 flex justify-between items-center">
+                                <span class="font-bold text-amber-200 truncate max-w-[200px]">{{ cin.title }}</span>
+                                <form action="/admin/delete_cinema/{{ loop.index0 }}" method="POST" onsubmit="return confirm('Hapus video ini?');">
+                                    <button type="submit" class="bg-red-950/60 hover:bg-red-900 text-red-300 border border-red-800 px-2 py-1 rounded text-[10px]">
+                                        🗑️ Hapus
+                                    </button>
+                                </form>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-xs text-stone-500 italic">Belum ada video.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- 2. Tambah Suvenir Baru -->
+                <div class="bg-stone-900 border border-stone-800 p-4 rounded-xl">
+                    <h3 class="text-sm font-bold text-amber-400 mb-3 border-b border-stone-800 pb-2">🎁 Tambah Barang Toko Suvenir</h3>
+                    <form action="/admin/add_souvenir" method="POST" enctype="multipart/form-data" class="space-y-3 text-xs">
+                        <div>
+                            <label class="block text-stone-400 mb-1">Nama Suvenir / Hadiah:</label>
+                            <input type="text" name="name" required placeholder="Contoh: Koin Emas Quest" class="w-full bg-stone-950 border border-stone-800 rounded p-2 text-stone-200">
+                        </div>
+                        <div>
+                            <label class="block text-stone-400 mb-1">Deskripsi:</label>
+                            <input type="text" name="desc" placeholder="Item pembuka pintu..." class="w-full bg-stone-950 border border-stone-800 rounded p-2 text-stone-200">
+                        </div>
+                        <div>
+                            <label class="block text-stone-400 mb-1">Foto Suvenir:</label>
+                            <input type="file" name="photo" accept="image/*" class="w-full text-stone-400 text-xs">
+                        </div>
+                        <div class="flex items-center gap-2 pt-1">
+                            <input type="checkbox" id="is_key_item" name="is_key_item" class="w-4 h-4 accent-amber-500">
+                            <label for="is_key_item" class="text-amber-300">Jadikan Sebagai Kunci Quest Vault</label>
+                        </div>
+                        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold py-2 rounded transition">
+                            Simpan ke Toko Suvenir
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>

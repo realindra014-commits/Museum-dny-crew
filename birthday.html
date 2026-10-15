@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Ulang Tahun - Museum DNY</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .photo-frame {
+            background: #292524;
+            border: 8px solid #44403c;
+            border-bottom: 24px solid #44403c;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(0,0,0,0.8);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .photo-frame:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px -5px rgba(245, 158, 11, 0.2);
+        }
+        .curator-plaque {
+            background: linear-gradient(135deg, #1c1917 0%, #292524 100%);
+            border: 1px solid #78716c;
+            border-left: 4px solid #f59e0b;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="bg-stone-950 text-stone-100 min-h-screen p-4 sm:p-6 font-sans">
+    <div class="max-w-4xl mx-auto">
+        <a href="/" class="text-amber-500 hover:underline text-sm">&larr; Kembali ke Museum</a>
+        <h1 class="text-2xl font-bold mt-4 mb-2 text-amber-400">🎂 Jadwal Ulang Tahun DNY Crew</h1>
+        
+        <!-- Plakat Deskripsi Kurator -->
+        <div class="curator-plaque p-3.5 rounded-lg mb-6 flex items-start gap-3">
+            <span class="text-xl">📜</span>
+            <div>
+                <h3 class="text-xs font-serif font-bold text-amber-300 uppercase tracking-wider">Catatan Kurator Pameran</h3>
+                <p class="text-[11px] text-stone-300 mt-0.5 leading-relaxed">
+                    Ruang pameran khusus yang mencatat tanggal perayaan hari lahir seluruh anggota kru. Data ini disinkronkan secara otomatis langsung dari pencatatan galeri utama kru.
+                </p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 mt-6">
+            {% for bday in birthday %}
+            <div class="photo-frame rounded flex flex-col items-center p-2 relative">
+                <div class="w-full h-36 bg-stone-950 overflow-hidden border border-stone-900">
+                    {% if bday.photo %}
+                    <img src="{{ url_for('static', filename='uploads/' + bday.photo) }}" alt="{{ bday.name }}" class="w-full h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-full flex items-center justify-center text-stone-600 text-2xl">🎂</div>
+                    {% endif %}
+                </div>
+                
+                <div class="mt-2 text-center w-full px-1">
+                    <h2 class="font-serif font-bold text-xs text-amber-200 tracking-wide truncate">{{ bday.name }}</h2>
+                    <p class="text-[9px] text-amber-400 font-medium mt-0.5">📅 {{ bday.date }}</p>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-stone-500 italic col-span-full text-center py-10">Belum ada jadwal ulang tahun. Atur tanggal ulang tahun saat menambahkan anggota di Galeri DNY Crew.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

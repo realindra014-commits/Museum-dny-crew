@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruang Bawah Tanah Rahasia - Museum DNY Crew</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .vault-room {
+            background: linear-gradient(to bottom, #090604 0%, #15100c 50%, #1c140f 100%);
+        }
+    </style>
+</head>
+<body class="bg-stone-950 text-stone-100 min-h-screen p-4 sm:p-6 font-sans vault-room">
+    <div class="max-w-4xl mx-auto">
+        
+        <div class="flex justify-between items-center mb-4">
+            <a href="/" class="text-amber-500 hover:underline text-sm">&larr; Keluar ke Lobi Museum</a>
+            <span class="text-xs bg-amber-950 text-amber-400 border border-amber-800 px-3 py-1 rounded-full font-mono">
+                🗝️ Mode Akses Pengelola Aktif
+            </span>
+        </div>
+
+        <!-- Header Vault -->
+        <div class="bg-amber-950/30 border border-amber-800/60 p-5 rounded-2xl mb-6 shadow-xl text-center backdrop-blur">
+            <h1 class="text-2xl sm:text-3xl font-serif font-bold text-amber-400">🗝️ Ruang Bawah Tanah Rahasia (*Secret Vault*)</h1>
+            <p class="text-xs text-amber-200/70 mt-1 max-w-lg mx-auto">
+                Arsip foto lama, dokumen privat, dan kenangan rahasia DNY Crew tersimpan aman di sini.
+            </p>
+        </div>
+
+        <!-- Form Tambah Arsip / Foto Lama -->
+        <div class="bg-stone-900/90 border border-amber-900/50 p-4 rounded-xl mb-8 backdrop-blur">
+            <h3 class="text-xs font-bold text-amber-400 mb-3 flex items-center gap-1.5">
+                <span>➕</span> Unggah Foto Lama / Dokumen ke Brankas
+            </h3>
+            <form action="/vault" method="POST" enctype="multipart/form-data" class="space-y-3 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-amber-200/70 mb-1">Judul Arsip / Foto:</label>
+                        <input type="text" name="title" required placeholder="Contoh: Dokumentasi Lawas 2024" class="w-full bg-stone-950 border border-amber-900/60 rounded p-2 text-stone-200 focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-amber-200/70 mb-1">Pilih Berkas Foto:</label>
+                        <input type="file" name="photo" accept="image/*" class="w-full text-xs text-stone-400 file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-stone-950 file:text-amber-300 hover:file:bg-stone-800">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-amber-200/70 mb-1">Deskripsi / Catatan Kurator:</label>
+                    <textarea name="desc" rows="2" placeholder="Ceritakan sejarah atau cerita di balik foto/dokumen ini..." class="w-full bg-stone-950 border border-amber-900/60 rounded p-2 text-stone-200 focus:outline-none focus:border-amber-500"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-amber-700 hover:bg-amber-600 text-stone-950 font-bold py-2 rounded transition shadow-lg">
+                    Simpan Arsip ke Brankas
+                </button>
+            </form>
+        </div>
+
+        <!-- Daftar Arsip Rahasia -->
+        <h2 class="font-serif font-bold text-amber-300 text-base mb-4">📜 Galeri Arsip & Foto Lama</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {% if secrets %}
+                {% for item in secrets %}
+                <div class="bg-stone-900/80 border border-amber-900/40 rounded-xl p-4 flex flex-col justify-between backdrop-blur">
+                    <div>
+                        {% if item.photo %}
+                        <div class="w-full h-48 bg-stone-950 rounded-lg overflow-hidden border border-amber-900/40 mb-3">
+                            <img src="{{ url_for('static', filename='uploads/' + item.photo) }}" alt="{{ item.title }}" class="w-full h-full object-cover">
+                        </div>
+                        {% endif %}
+
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[10px] bg-amber-950 text-amber-400 border border-amber-800 px-2 py-0.5 rounded font-mono">
+                                {{ item.date }}
+                            </span>
+                            <span class="text-xs">🔐</span>
+                        </div>
+                        <h4 class="font-bold text-amber-200 text-sm mb-1">{{ item.title }}</h4>
+                        {% if item.desc %}
+                        <p class="text-xs text-stone-300 leading-relaxed">{{ item.desc }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-xs text-stone-500 italic col-span-full text-center py-8">Belum ada arsip tersimpan.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</body>
+</html>

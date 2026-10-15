@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Suvenir & Penukaran Kunci - Museum DNY Crew</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-stone-950 text-stone-100 min-h-screen p-4 sm:p-6 font-sans">
+    <div class="max-w-4xl mx-auto">
+        
+        <div class="flex justify-between items-center mb-4">
+            <a href="/" class="text-amber-400 hover:underline text-sm">&larr; Kembali ke Museum</a>
+            {% if is_admin %}
+            <a href="/admin_dashboard" class="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold px-3 py-1.5 rounded text-xs transition">
+                ⚙️ Panel Admin
+            </a>
+            {% endif %}
+        </div>
+
+        <!-- Header Toko Suvenir -->
+        <div class="bg-stone-900 border border-stone-800 p-5 rounded-2xl mb-6 shadow-xl text-center">
+            <h1 class="text-2xl sm:text-3xl font-serif font-bold text-amber-400">🎁 Toko Suvenir & Meja Penukaran</h1>
+            <p class="text-xs text-stone-400 mt-1 max-w-lg mx-auto">
+                Klaim suvenir eksklusif atau temukan item khusus (*Quest Item*) untuk ditukarkan dengan **Kunci Pintu Bawah Tanah Museum**!
+            </p>
+        </div>
+
+        <!-- Panel Status Quest Kunci & Tas Inventaris -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <!-- Inventaris Pengunjung -->
+            <div class="bg-stone-900/90 border border-stone-800 p-4 rounded-xl">
+                <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">🎒 Tas Suvenir Saya ({{ inventory|length }} Item)</h3>
+                <div class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                    {% if inventory %}
+                        {% for item in inventory %}
+                        <div class="bg-stone-950 p-2.5 rounded border border-stone-800 flex justify-between items-center text-xs">
+                            <div>
+                                <span class="font-bold text-amber-200">{{ item.name }}</span>
+                                {% if item.is_key_item %}
+                                <span class="ml-2 bg-amber-500/20 text-amber-400 text-[9px] px-1.5 py-0.5 rounded font-mono">🔑 Kunci Quest</span>
+                                {% endif %}
+                            </div>
+                            <span class="text-[10px] text-stone-400">Tersimpan</span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-xs text-stone-500 italic py-2">Tas Anda masih kosong. Klaim suvenir di bawah!</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Meja Penukaran Kunci -->
+            <div class="bg-amber-950/20 border border-amber-900/50 p-4 rounded-xl flex flex-col justify-between">
+                <div>
+                    <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1">🔐 Meja Penukaran Kunci Vault</h3>
+                    <p class="text-[11px] text-stone-300 mb-3">
+                        Tukarkan **Koin Emas Quest / Item Spesial** dari tas suvenir Anda untuk mendapatkan akses ke **Ruang Bawah Tanah Rahasia**.
+                    </p>
+                </div>
+                
+                <div>
+                    {% if has_key %}
+                        <div class="bg-green-950/60 border border-green-700/50 text-green-300 p-2.5 rounded text-center text-xs font-bold mb-2">
+                            ✅ Anda sudah memiliki Kunci Vault! Cek Pintu Vault di Lobi Museum.
+                        </div>
+                        <a href="/" class="block text-center w-full bg-green-600 hover:bg-green-500 text-stone-950 font-bold py-2 rounded text-xs transition">
+                            Menuju Pintu Vault Utama ➔
+                        </a>
+                    {% else %}
+                        <form action="/exchange_key" method="POST">
+                            <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold py-2 rounded text-xs transition shadow-lg">
+                                🔑 Tukar Item dengan Kunci Bawah Tanah
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Etalase Daftar Suvenir -->
+        <h2 class="font-serif font-bold text-amber-300 text-base mb-4">🏪 Etalase Toko Suvenir</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {% if souvenirs %}
+                {% for item in souvenirs %}
+                <div class="bg-stone-900 border border-stone-800 rounded-xl p-4 flex flex-col justify-between">
+                    <div>
+                        {% if item.photo %}
+                        <div class="w-full h-32 bg-stone-950 rounded-lg overflow-hidden border border-stone-800 mb-3">
+                            <img src="{{ url_for('static', filename='uploads/' + item.photo) }}" alt="{{ item.name }}" class="w-full h-full object-cover">
+                        </div>
+                        {% else %}
+                        <div class="w-full h-32 bg-stone-950 rounded-lg flex items-center justify-center border border-stone-800 mb-3 text-3xl">
+                            🎁
+                        </div>
+                        {% endif %}
+
+                        <h4 class="font-bold text-amber-200 text-sm mb-1">{{ item.name }}</h4>
+                        <p class="text-xs text-stone-400 mb-3">{{ item.desc }}</p>
+                        
+                        {% if item.is_key_item %}
+                        <span class="inline-block text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded mb-3 font-mono">
+                            ⭐ Barang Syarat Kunci Vault
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <form action="{{ url_for('claim_souvenir', index=loop.index0) }}" method="POST">
+                        <button type="submit" class="w-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs py-2 rounded font-medium transition">
+                            Klaim ke Tas Suvenir ➔
+                        </button>
+                    </form>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-xs text-stone-500 italic col-span-full text-center py-8">Belum ada suvenir di etalase.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</body>
+</html>

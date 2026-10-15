@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruang Admin - Museum DNY Crew</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .admin-room {
+            background: linear-gradient(to bottom, #110e0c 0%, #1c1917 50%, #292524 100%);
+        }
+    </style>
+</head>
+<body class="bg-stone-950 text-stone-100 min-h-screen flex flex-col justify-between p-4 font-sans admin-room">
+    <div class="max-w-md w-full mx-auto my-auto bg-stone-900 border border-amber-900/50 p-6 rounded-2xl shadow-2xl relative">
+        
+        <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-stone-950 border border-amber-500/45 px-4 py-1.5 rounded-full shadow-lg">
+            <span class="text-xs font-serif font-bold text-amber-400">🔐 Portal Ruang Admin</span>
+        </div>
+
+        <div class="text-center mt-3 mb-6">
+            <span class="text-4xl block mb-2">🏛️</span>
+            <h1 class="text-xl font-serif font-bold text-amber-300">Kurator & Pengelola Museum</h1>
+            <p class="text-xs text-stone-400 mt-1">Ruangan ini terkunci untuk umum. Masukkan sandi pengelola untuk mengakses Ruang Bawah Tanah.</p>
+        </div>
+
+        {% if error %}
+        <div class="bg-red-950/60 border border-red-700 text-red-300 text-xs p-3 rounded mb-4 text-center font-medium">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form action="/admin_vault" method="POST" class="space-y-4 text-xs">
+            <div>
+                <label class="block text-stone-300 mb-1 font-medium">Kode Sandi Admin:</label>
+                <input type="password" name="code" required placeholder="Masukkan sandi rahasia..." class="w-full bg-stone-950 border border-stone-800 rounded p-2.5 text-stone-200 focus:outline-none focus:border-amber-500">
+            </div>
+
+            <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold py-2.5 rounded transition shadow-lg">
+                Buka Pintu Ruang Admin
+            </button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <a href="/" class="text-stone-400 hover:text-amber-400 text-xs">&larr; Kembali ke Lobi Museum</a>
+        </div>
+    </div>
+
+    <footer class="text-center text-[10px] text-stone-500 py-2">
+        Museum DNY Crew &copy; Admin Security System
+    </footer>
+</body>
+</html>

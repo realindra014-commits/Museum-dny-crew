@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bioskop Mini & Panggung Karya - Museum DNY Crew</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .cinema-screen {
+            background: #000;
+            border: 8px solid #292524;
+            box-shadow: 0 0 35px rgba(245, 158, 11, 0.25);
+        }
+        .curtain-bg {
+            background: linear-gradient(135deg, #450a0a 0%, #7f1d1d 50%, #450a0a 100%);
+            border-bottom: 4px solid #b45309;
+        }
+    </style>
+</head>
+<body class="bg-stone-950 text-stone-100 min-h-screen p-4 sm:p-6 font-sans">
+    <div class="max-w-4xl mx-auto">
+        
+        <div class="flex justify-between items-center mb-4">
+            <a href="/" class="text-amber-500 hover:underline text-sm">&larr; Kembali ke Museum</a>
+        </div>
+
+        <!-- Header Bioskop Mini -->
+        <div class="curtain-bg p-5 rounded-2xl mb-6 text-center relative overflow-hidden shadow-xl">
+            <h1 class="text-2xl sm:text-3xl font-serif font-bold text-amber-300">🎬 Bioskop Mini & Panggung Karya</h1>
+            <p class="text-xs text-stone-300 mt-1 max-w-lg mx-auto">
+                Ruang pameran animasi 3D, klip cerita, dan dokumenter reka adegan karya DNY Crew.
+            </p>
+        </div>
+
+        <!-- Form Tambah Video/Karya Baru -->
+        <div class="bg-stone-900 border border-stone-800 p-4 rounded-xl mb-8">
+            <h3 class="text-sm font-bold text-amber-400 mb-3 flex items-center gap-1.5">
+                <span>➕</span> Tayangkan Karya Baru
+            </h3>
+            <form action="/cinema" method="POST" class="space-y-3 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-stone-400 mb-1">Judul Karya / Episode:</label>
+                        <input type="text" name="title" required placeholder="Contoh: Opat Baraya - Episode 1" class="w-full bg-stone-950 border border-stone-800 rounded p-2 text-stone-200 focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-stone-400 mb-1">Kategori Karya:</label>
+                        <select name="category" class="w-full bg-stone-950 border border-stone-800 rounded p-2 text-stone-200 focus:outline-none focus:border-amber-500">
+                            <option value="Animasi 3D Pixar Style">Animasi 3D Pixar Style</option>
+                            <option value="Behind The Scenes">Behind The Scenes</option>
+                            <option value="Dokumenter & Momen">Dokumenter & Momen</option>
+                            <option value="Public Speaking & Storytelling">Public Speaking & Storytelling</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-stone-400 mb-1">Tautan YouTube (Link Embed/Watch):</label>
+                    <input type="url" name="video_url" required placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-stone-950 border border-stone-800 rounded p-2 text-stone-200 focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div>
+                    <label class="block text-stone-400 mb-1">Deskripsi Ringkas:</label>
+                    <textarea name="desc" rows="2" placeholder="Tuliskan sinopsis singkat cerita atau karya ini..." class="w-full bg-stone-950 border border-stone-800 rounded p-2 text-stone-200 focus:outline-none focus:border-amber-500"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold py-2 rounded transition">
+                    🎬 Tayangkan di Layar Museum
+                </button>
+            </form>
+        </div>
+
+        <!-- Daftar Pemutar Video Bioskop -->
+        <div class="space-y-8">
+            {% if cinema %}
+                {% for item in cinema %}
+                <div class="cinema-screen rounded-xl overflow-hidden p-3 sm:p-4 bg-stone-900 border border-stone-800">
+                    <div class="flex justify-between items-center mb-2 px-1">
+                        <span class="text-xs bg-amber-950 text-amber-300 border border-amber-800/60 px-2.5 py-0.5 rounded-full font-medium">
+                            {{ item.category }}
+                        </span>
+                        <span class="text-[10px] text-stone-500">DNY Cinema Player</span>
+                    </div>
+
+                    <!-- Embed Video Player -->
+                    <div class="aspect-video w-full rounded-lg overflow-hidden bg-black mb-3">
+                        <iframe class="w-full h-full" src="{{ item.video_url }}" title="{{ item.title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+
+                    <h2 class="text-lg font-serif font-bold text-amber-300">{{ item.title }}</h2>
+                    {% if item.desc %}
+                        <p class="text-xs text-stone-400 mt-1 leading-relaxed">{{ item.desc }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-12 bg-stone-900/50 border border-stone-800 rounded-xl">
+                    <span class="text-4xl block mb-2">🍿</span>
+                    <p class="text-xs text-stone-400">Layar bioskop masih bersiap. Tambahkan video/animasi pertama di atas!</p>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</body>
+</html>
