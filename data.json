@@ -1,0 +1,82 @@
+{
+    "birthday": [
+        {
+            "date": "15 Juli 2000",
+            "name": "Fahmi",
+            "photo": "Screenshot_20261014_204756.jpg"
+        }
+    ],
+    "birthdays": [],
+    "crew": [],
+    "farewell": [
+        {
+            "audio": "Y2Mate.is_-_MELAWAN_HATI_FiersaBesari_PrinsaMandagie.mp3",
+            "end_date": "15 Oktober 2026",
+            "message": "Peran: Kameramen ",
+            "photo": "DSC00908.JPG",
+            "title": "Perpisahan - Ryan "
+        },
+        {
+            "audio": "Y2Mate.is_-_Virzha_Aku_Lelakimu_lirik_lagu.mp3",
+            "end_date": "15 Oktober 2026",
+            "message": "Peran: Yaiyalah",
+            "photo": "Screenshot_20261014_204756.jpg",
+            "title": "Perpisahan - Fahmi"
+        }
+    ],
+    "guestbook": [
+        {
+            "date": "15 Oct 2026, 12:15",
+            "message": "Kenangan masa lalu",
+            "name": "Deni"
+        }
+    ],
+    "hologram": [
+        {
+            "photo": "HALBIL-DEENAY_2026_53.jpg",
+            "subtitle": "",
+            "title": "Ini adalah momen langka "
+        }
+    ],
+    "items": [
+        {
+            "audio": null,
+            "comments": [],
+            "description": "Rajin dan cepat",
+            "image": "/static/uploads/HALBIL-DEENAY_2026_53.jpg",
+            "title": "Rivani (Admin shopee)",
+            "work_date": "-"
+        },
+        {
+            "audio": "/static/uploads/Y2Mate.is_-_Virzha_Aku_Lelakimu_lirik_lagu.mp3",
+            "comments": [],
+            "description": "Cgxgc",
+            "image": "/static/uploads/DSC00908.JPG",
+            "title": "Gjv",
+            "work_date": "11 Juli 2023"
+        },
+        {
+            "audio": "/static/uploads/Y2Mate.is_-_MELAWAN_HATI_FiersaBesari_PrinsaMandagie.mp3",
+            "comments": [],
+            "description": "Akhir yang sedih",
+            "image": "/static/uploads/fahmi.png",
+            "title": "Fahmi",
+            "work_date": "12 Januari 2025"
+        },
+        {
+            "audio": "/static/audio/1792025596_Y2Mate.is_-_The_Power_Of_Love_Celine_Dion___Timeless_Emotional_Video_Remix_music_shorts_short.mp3",
+            "description": "Selamat berjumpa kembali",
+            "image": "/static/uploads/IMG_20261012_231655.jpg",
+            "title": "Nurela",
+            "work_date": "20 Mei 2025"
+        }
+    ],
+    "settings": {
+        "accent_color": "amber",
+        "atmosphere": "rain",
+        "card_style": "minimal",
+        "font_size": "small",
+        "museum_name": "MUSEUM DNY CREW",
+        "museum_subtitle": "DIGITAL GALLERY ARCHIVE"
+    }
+}
